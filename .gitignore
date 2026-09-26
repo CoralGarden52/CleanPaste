@@ -12,3 +12,5 @@ src-tauri/gen/
 .vscode/
 Thumbs.db
 Desktop.ini
+docs/
+.superpowers/
