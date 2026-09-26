@@ -12,6 +12,8 @@ interface AppShellProps {
   activeFeature: FeatureId
   inputRef: RefObject<HTMLTextAreaElement | null>
   onFeatureChange: (feature: FeatureId) => void
+  warning?: string
+  onDismissWarning?: () => void
 }
 
 function ActiveFeature({
@@ -31,7 +33,13 @@ function ActiveFeature({
   }
 }
 
-export function AppShell({ activeFeature, inputRef, onFeatureChange }: AppShellProps) {
+export function AppShell({
+  activeFeature,
+  inputRef,
+  onFeatureChange,
+  warning,
+  onDismissWarning,
+}: AppShellProps) {
   return (
     <main className="app-shell">
       <div className="app-container">
@@ -39,6 +47,16 @@ export function AppShell({ activeFeature, inputRef, onFeatureChange }: AppShellP
           <p className="app-kicker">LOCAL TEXT TOOL</p>
           <h1>CleanPaste</h1>
           <p className="app-description">简洁、离线、即时处理你的文本。</p>
+          {warning ? (
+            <div className="native-warning" role="status" aria-live="polite">
+              <span>{warning}</span>
+              {onDismissWarning ? (
+                <button type="button" aria-label="关闭提示" onClick={onDismissWarning}>
+                  关闭
+                </button>
+              ) : null}
+            </div>
+          ) : null}
         </header>
         <TabBar activeFeature={activeFeature} onSelect={onFeatureChange} />
         <section

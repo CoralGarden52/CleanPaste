@@ -16,6 +16,10 @@ export const FEATURE_LABELS: Record<FeatureId, string> = {
   replace: '文本替换',
 }
 
+export const ALT_FEATURES: Readonly<Record<string, FeatureId>> = Object.fromEntries(
+  FEATURE_ORDER.map((feature, index) => [String(index + 1), feature]),
+) as Record<string, FeatureId>
+
 export interface FeatureProps {
   inputRef: RefObject<HTMLTextAreaElement | null>
 }

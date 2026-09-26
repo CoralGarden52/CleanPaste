@@ -29,6 +29,11 @@
   },
   "bundle": {
     "active": true,
+    "category": "Utility",
+    "publisher": "CoralGarden52",
+    "copyright": "Copyright (c) 2026 CoralGarden52",
+    "shortDescription": "Offline local text processing tool",
+    "longDescription": "CleanPaste is a lightweight Windows desktop application for local plain-text conversion, whitespace removal, Unicode-aware statistics, and literal text replacement.",
     "targets": ["msi", "nsis"],
     "icon": [
       "icons/32x32.png",

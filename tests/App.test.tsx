@@ -1,12 +1,38 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import App from '../src/App'
+
+const { nativeListeners, listenMock } = vi.hoisted(() => {
+  const nativeListeners = new Map<string, (event: { payload: unknown }) => void>()
+  const listenMock = vi.fn(
+    (eventName: string, callback: (event: { payload: unknown }) => void) => {
+      nativeListeners.set(eventName, callback)
+      return Promise.resolve(() => nativeListeners.delete(eventName))
+    },
+  )
+
+  return { nativeListeners, listenMock }
+})
+
+vi.mock('@tauri-apps/api/event', () => ({ listen: listenMock }))
+
+function enableNativeRuntime() {
+  Object.defineProperty(window, '__TAURI_INTERNALS__', {
+    configurable: true,
+    value: {},
+  })
+}
 
 describe('CleanPaste 应用界面', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
+  })
+
+  afterEach(() => {
+    nativeListeners.clear()
+    delete (window as Window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__
   })
 
   it('启动时选择纯文本并显示四个功能页签', () => {
@@ -107,5 +133,57 @@ describe('CleanPaste 应用界面', () => {
     expect(preventDefault).toHaveBeenCalled()
     expect(input).toHaveValue('纯文本内容')
     preventDefault.mockRestore()
+  })
+
+  it('使用 Alt+1 到 Alt+4 切换功能并阻止浏览器默认行为', () => {
+    const preventDefault = vi.spyOn(Event.prototype, 'preventDefault')
+    render(<App />)
+
+    for (const [key, label] of [
+      ['1', '纯文本'],
+      ['2', '去除空格'],
+      ['3', '字数统计'],
+      ['4', '文本替换'],
+    ]) {
+      fireEvent.keyDown(window, { key, altKey: true })
+      expect(screen.getByRole('tab', { name: label })).toHaveAttribute('aria-selected', 'true')
+    }
+
+    expect(preventDefault).toHaveBeenCalledTimes(4)
+    preventDefault.mockRestore()
+  })
+
+  it('接收原生功能事件后切换页签并聚焦对应输入框', async () => {
+    enableNativeRuntime()
+    render(<App />)
+
+    await waitFor(() => {
+      expect(listenMock).toHaveBeenCalledWith('shortcut-command', expect.any(Function))
+    })
+
+    act(() => {
+      nativeListeners.get('shortcut-command')?.({
+        payload: { kind: 'feature', feature: 'replace' },
+      })
+    })
+
+    expect(screen.getByRole('tab', { name: '文本替换' })).toHaveAttribute('aria-selected', 'true')
+    await waitFor(() => expect(screen.getByLabelText('原始文本')).toHaveFocus())
+  })
+
+  it('显示原生注册告警但不阻塞应用操作', async () => {
+    enableNativeRuntime()
+    render(<App />)
+
+    await waitFor(() => {
+      expect(listenMock).toHaveBeenCalledWith('native-warning', expect.any(Function))
+    })
+
+    act(() => {
+      nativeListeners.get('native-warning')?.({ payload: 'Ctrl+Alt+C 注册失败' })
+    })
+
+    expect(screen.getByRole('status')).toHaveTextContent('Ctrl+Alt+C 注册失败')
+    expect(screen.getByRole('tab', { name: '纯文本' })).toBeEnabled()
   })
 })
