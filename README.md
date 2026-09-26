@@ -11,6 +11,10 @@ CleanPaste 是一个面向 Windows 的轻量级本地文本处理工具。文本
 
 统计规则示例：`你好 CleanPaste 2026!` 的汉字为 2，英文单词为 1，数字项为 1，标点为 1，纯字数为 3，总字数为 5。`2026` 作为一个数字项计数。
 
+## 界面预览
+
+![CleanPaste 主界面预览](assets/cleanpaste-preview.png)
+
 ## 快捷键
 
 | 快捷键 | 操作 |
@@ -34,32 +38,6 @@ CleanPaste 是一个面向 Windows 的轻量级本地文本处理工具。文本
 
 - `*.msi`：适合使用 Windows Installer 的安装流程。
 - `*.exe`：NSIS 安装程序，适合直接双击安装。
-
-## 本地开发
-
-环境要求：Node.js 20+、稳定版 Rust（最低 1.77.2）、Windows MSVC 工具链和 WebView2 Runtime。
-
-```powershell
-npm install
-npm test -- --run
-npm run build
-npm run tauri:dev
-```
-
-生成 Windows 安装包：
-
-```powershell
-npm run tauri:build
-```
-
-产物位于：
-
-```text
-src-tauri/target/release/bundle/msi/*.msi
-src-tauri/target/release/bundle/nsis/*.exe
-```
-
-界面截图预留路径：`docs/assets/cleanpaste-screenshot.png`。
 
 ## 技术栈
 
