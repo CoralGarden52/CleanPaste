@@ -35,6 +35,15 @@ describe('CleanPaste 应用界面', () => {
     delete (window as Window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__
   })
 
+  it('四个功能页签不启用滚动容器', () => {
+    render(<App />)
+
+    expect(screen.getByRole('tablist')).toHaveStyle({
+      overflowX: 'visible',
+      overflowY: 'visible',
+    })
+  })
+
   it('启动时选择纯文本并显示四个功能页签', () => {
     render(<App />)
 

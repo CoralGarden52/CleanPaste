@@ -9,7 +9,12 @@ interface TabBarProps {
 export function TabBar({ activeFeature, onSelect }: TabBarProps) {
   return (
     <nav className="tab-bar" aria-label="功能导航">
-      <div className="tab-list" role="tablist" aria-label="CleanPaste 功能">
+      <div
+        className="tab-list"
+        role="tablist"
+        aria-label="CleanPaste 功能"
+        style={{ overflowX: 'visible', overflowY: 'visible' }}
+      >
         {FEATURE_ORDER.map((feature) => (
           <button
             key={feature}

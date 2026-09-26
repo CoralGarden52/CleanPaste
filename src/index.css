@@ -105,8 +105,9 @@ button {
 
 .tab-list {
   display: flex;
+  flex-wrap: wrap;
   gap: 24px;
-  overflow-x: auto;
+  overflow: visible;
 }
 
 .tab-button {
