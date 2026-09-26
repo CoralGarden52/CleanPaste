@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-capability",
+  "description": "CleanPaste 主窗口能力配置",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}
