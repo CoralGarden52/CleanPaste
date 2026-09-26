@@ -146,5 +146,6 @@ README 说明四个功能、快捷键、截图占位、Windows 安装、开发�
 > CleanPaste processes all text locally. No text is uploaded to any server.
 
 ## 验收标准映射
+本机尚未安装 Rust/Cargo，可自行将工具链安装到 `D:\Program Files`。
 
 验收按以下层次执行：文本纯函数测试覆盖算法契约；Vite 构建验证 TypeScript/React；Cargo check 验证 Rust；Tauri build 验证 Windows 安装包配置；人工检查或运行时检查验证托盘、快捷键、单实例和关闭隐藏行为。任何功能不以 TODO、空函数或未完成按钮代替。
